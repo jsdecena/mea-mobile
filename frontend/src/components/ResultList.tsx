@@ -36,7 +36,7 @@ const ResultList = ({ items, setItem, setHasSelected } : ResultListProp) => {
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
             >
-              {DateTime.fromSeconds(item.dt).toLocaleString(DateTime.DATE_HUGE)}
+              {DateTime.fromSeconds(item.dt).toLocaleString(DateTime.DATE_HUGE)} at {DateTime.fromSeconds(item.dt).toLocaleString(DateTime.TIME_SIMPLE)}
             </th>
             <td className="px-6 py-4">{item.main.temp} °C</td>
             <td className="px-6 py-4">{item.weather[0].description}</td>

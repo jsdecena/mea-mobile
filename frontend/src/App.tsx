@@ -55,7 +55,7 @@ function App() {
     
     if(result) {
       const response = await getWeatherByCity({ lat: result?.lat, lon: result?.lon })
-      setDetails(response?.data)
+      setDetails(response?.data.data)
     }
 
     setIsloading(false)
