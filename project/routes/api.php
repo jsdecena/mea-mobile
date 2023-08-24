@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\CitiesController;
+use App\Http\Controllers\CityDetailController;
+use App\Http\Controllers\CityWeatherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::get('/cities', CitiesController::class);
+Route::post('/city-coordinates', CityDetailController::class);
+Route::post('/city-weather', CityWeatherController::class);

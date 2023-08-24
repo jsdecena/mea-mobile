@@ -16,7 +16,7 @@ const ResultItem = ({ item, city, setHasSelected } : ResultItemProp) => {
 
   useEffect(() => {
     setItemDetail(item)
-  }, [itemDetail])
+  }, [item])
 
   return (
     <>

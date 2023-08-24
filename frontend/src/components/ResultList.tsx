@@ -1,6 +1,5 @@
 import { DateTime } from "luxon";
 import { ListProp } from "../App";
-import { useState } from "react";
 
 export interface ResultListProp {
   items: ListProp[]
@@ -10,10 +9,6 @@ export interface ResultListProp {
 }
 
 const ResultList = ({ items, setItem, setHasSelected } : ResultListProp) => {
-  // Display's day, temp, and description for each day
-
-  // on click, day, city, temp, min, max description, and weather icon (optional)  
-
   return (
     <table className="w-full text-sm text-left text-gray-500 mt-10">
       <thead className="text-xs text-gray-700 uppercase bg-gray-50">

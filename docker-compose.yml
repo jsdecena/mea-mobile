@@ -8,6 +8,7 @@ services:
     environment:
       SERVICE_NAME: app-api
       SERVICE_TAGS: dev
+      WEATHER_APP_ID:
     working_dir: /var/www
     volumes:
       - ./project:/var/www
