@@ -35,6 +35,8 @@ class CityWeatherController extends Controller
 
         $filteredResult = json_decode($response->body());
 
+        $collection = collect($filteredResult->list)->unique('dt')->all();
+
         return response()->json($filteredResult);
     }
 }

@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
+import { API_URL } from '../../App'
 
 type PayloadProp = {
   lat: number | undefined
@@ -7,7 +8,10 @@ type PayloadProp = {
 }
 
 const getWeatherByCity = async ({ lat, lon, limit = 10 } : PayloadProp): Promise<AxiosResponse | undefined> => {
-  return await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=1f1841e22c7e686023a46767226fe795&limit=${limit}`)
+  return await axios.post(`${API_URL}/api/city-weather`, {
+    lat: String(lat),
+    lon: String(lon)
+  })  
 }
 
 export default getWeatherByCity
