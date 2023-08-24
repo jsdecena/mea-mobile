@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class CityDetailController extends Controller
 {
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, WeatherService $weatherService): JsonResponse
     {
         $listOfCities = collect(CitiesController::CITY_LIST)->map(function ($item) {
             return $item['id'];
@@ -31,7 +31,6 @@ class CityDetailController extends Controller
 
         $validatedFields = $validator->validated();
 
-        $weatherService = new WeatherService();
         $response = $weatherService->getCityCoordinates($validatedFields['city']);
 
         $filteredResult = json_decode($response->body());

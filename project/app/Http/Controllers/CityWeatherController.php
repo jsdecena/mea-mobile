@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class CityWeatherController extends Controller
 {
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, WeatherService $weatherService): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'lat' => [
@@ -31,7 +31,6 @@ class CityWeatherController extends Controller
 
         $validatedFields = $validator->validated();
 
-        $weatherService = new WeatherService();
         $response = $weatherService->getCityWeather($validatedFields['lat'], $validatedFields['lon']);
 
         $filteredResult = json_decode($response->body());
