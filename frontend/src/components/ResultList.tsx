@@ -1,15 +1,19 @@
-import React from "react";
 import { DateTime } from "luxon";
 import { ListProp } from "../App";
+import { useState } from "react";
 
-export interface ResultListingProp {
+export interface ResultListProp {
   items: ListProp[]
+  city?: string
+  setItem: (item: ListProp) => void
+  setHasSelected: (hasSelected: boolean) => void
 }
 
-const ResultListing = ({ items } : ResultListingProp) => {
+const ResultList = ({ items, setItem, setHasSelected } : ResultListProp) => {
   // Display's day, temp, and description for each day
 
   // on click, day, city, temp, min, max description, and weather icon (optional)  
+
   return (
     <table className="w-full text-sm text-left text-gray-500 mt-10">
       <thead className="text-xs text-gray-700 uppercase bg-gray-50">
@@ -27,7 +31,10 @@ const ResultListing = ({ items } : ResultListingProp) => {
       </thead>
       <tbody>
         {items?.map((item, index) => (
-          <tr className="bg-white border-b" key={index}>
+          <tr className="bg-white border-b" key={index} onClick={() => {
+            setItem(item)
+            setHasSelected(true)
+          }}>
             <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
@@ -43,4 +50,4 @@ const ResultListing = ({ items } : ResultListingProp) => {
   );
 }
 
-export default ResultListing;
+export default ResultList;

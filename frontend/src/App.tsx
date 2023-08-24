@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import ResultListing from "./components/ResultListing";
+import { useEffect, useState } from "react";
 import Empty from "./components/Empty";
 import "./App.css";
 import getCityDetails from "./hooks/api/getCityDetails";
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import getWeatherByCity from "./hooks/api/getWeatherByCity";
+import ResultListWrapper from "./components/ResultListWrapper";
 
 interface MultipleItemProp {
   name: string
@@ -31,37 +31,32 @@ export interface ListProp {
       description: string
       icon: string
     }    
-  ]  
+  ]
 }
+
 
 function App() {
 
   const [isLoading, setIsloading] = useState<boolean>(false)
   const [items, setItems] = useState<MultipleItemProp[]>([])
   const [details, setDetails] = useState<ListProp[]>([])
+  const [city, setCity] = useState<string>('')
 
   const handleOnSelect = async(city: any) => {
     setIsloading(true)
 
+    setCity(city.name)
     const { data } : any = await getCityDetails({ cityName: city.name })
     const result = data.filter((item: SingleItemProp) => item.country === 'NZ')[0];
 
     const response = await getWeatherByCity({ lat: result.lat, lon: result.lon })
   
-    // transform the result
-    // const transformed = response?.data.list?.map((list: ListProp) => {
-    //   return {
-    //     dt: DateTime.fromSeconds(list.dt).toFormat('ccc, dd y'),
-    //     temp: list.main.temp,
-    //     temp_min: list.main.temp_min,
-    //     temp_max: list.main.temp_max,
-    //     description: list.weather[0].description,
-    //     icon: list.weather[0].icon
-    //   }
-    // })
-
     setDetails(response?.data.list)
     setIsloading(false)
+  }
+
+  const onClear = () => {
+    setDetails([])
   }
 
   useEffect(() => {
@@ -81,9 +76,10 @@ function App() {
         items={items as unknown as string[]}
         onSelect={handleOnSelect}
         autoFocus
+        onClear={onClear}
       />
       {isLoading && (<p className="p-4 mb-4 text-sm bg-gray-300 rounded-lg mt-5"> Fetching data, please wait ...</p>)}
-      <div>{details && details.length > 0 ? (<ResultListing items={details} />) : (<Empty />)}</div>
+      <div>{details && details.length > 0 ? (<ResultListWrapper city={city} items={details} />) : (<Empty />)}</div>
     </div>
   );
 }
