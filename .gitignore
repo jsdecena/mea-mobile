@@ -1,5 +1,5 @@
 .idea/
 # project/
-frontend/
+# frontend/
 db
 .env
