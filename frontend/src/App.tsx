@@ -1,62 +1,89 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import ResultListing from "./components/ResultListing";
+import Empty from "./components/Empty";
 import "./App.css";
+import getCityDetails from "./hooks/api/getCityDetails";
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import getWeatherByCity from "./hooks/api/getWeatherByCity";
+
+interface MultipleItemProp {
+  name: string
+  id: string
+}
+
+interface SingleItemProp {
+  name: string
+  state: string
+  lat: number
+  long: number
+  country: string
+}
+
+export interface ListProp {
+  dt: number // date timestamp
+  main: {
+    temp: number
+    temp_min: number
+    temp_max: number
+  }
+  weather: [
+    {
+      description: string
+      icon: string
+    }    
+  ]  
+}
 
 function App() {
+
+  const [isLoading, setIsloading] = useState<boolean>(false)
+  const [items, setItems] = useState<MultipleItemProp[]>([])
+  const [details, setDetails] = useState<ListProp[]>([])
+
+  const handleOnSelect = async(city: any) => {
+    setIsloading(true)
+
+    const { data } : any = await getCityDetails({ cityName: city.name })
+    const result = data.filter((item: SingleItemProp) => item.country === 'NZ')[0];
+
+    const response = await getWeatherByCity({ lat: result.lat, lon: result.lon })
+  
+    // transform the result
+    // const transformed = response?.data.list?.map((list: ListProp) => {
+    //   return {
+    //     dt: DateTime.fromSeconds(list.dt).toFormat('ccc, dd y'),
+    //     temp: list.main.temp,
+    //     temp_min: list.main.temp_min,
+    //     temp_max: list.main.temp_max,
+    //     description: list.weather[0].description,
+    //     icon: list.weather[0].icon
+    //   }
+    // })
+
+    setDetails(response?.data.list)
+    setIsloading(false)
+  }
+
+  useEffect(() => {
+    setItems([
+      {name: 'Auckland', id: 'auckland'},
+      {name: 'Hamilton', id: 'hamilton'},
+      {name: 'Wellington', id: 'wellington'},
+      {name: 'Dunedin', id: 'dunedin'},
+    ])
+  }, [details])
+
   return (
-    <div className="relative overflow-x-auto">
-      <table className="w-full text-sm text-left text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Product name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Color
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Category
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Price
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="bg-white border-b">
-            <th
-              scope="row"
-              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-            >
-              Apple MacBook Pro 17"
-            </th>
-            <td className="px-6 py-4">Silver</td>
-            <td className="px-6 py-4">Laptop</td>
-            <td className="px-6 py-4">$2999</td>
-          </tr>
-          <tr className="bg-white border-b">
-            <th
-              scope="row"
-              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-            >
-              Microsoft Surface Pro
-            </th>
-            <td className="px-6 py-4">White</td>
-            <td className="px-6 py-4">Laptop PC</td>
-            <td className="px-6 py-4">$1999</td>
-          </tr>
-          <tr className="bg-white">
-            <th
-              scope="row"
-              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-            >
-              Magic Mouse 2
-            </th>
-            <td className="px-6 py-4">Black</td>
-            <td className="px-6 py-4">Accessories</td>
-            <td className="px-6 py-4">$99</td>
-          </tr>
-        </tbody>
-      </table>
+    <div className="overflow-x-auto p-10">
+      <label htmlFor="email-address-icon">Search 5-day weather in your city</label>
+      <hr className="my-5" />
+      <ReactSearchAutocomplete
+        items={items as unknown as string[]}
+        onSelect={handleOnSelect}
+        autoFocus
+      />
+      {isLoading && (<p className="p-4 mb-4 text-sm bg-gray-300 rounded-lg mt-5"> Fetching data, please wait ...</p>)}
+      <div>{details && details.length > 0 ? (<ResultListing items={details} />) : (<Empty />)}</div>
     </div>
   );
 }
