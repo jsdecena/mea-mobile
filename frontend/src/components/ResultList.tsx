@@ -31,7 +31,7 @@ const ResultList = ({ items, setItem, setHasSelected } : ResultListProp) => {
             setItem(item)
             setHasSelected(true)
           }}>
-            <th><img src={`http://openweathermap.org/img/w/${item.weather[0].icon}.png`} width={24} height={24} /></th>
+            <th><img alt="weather-icon" src={`http://openweathermap.org/img/w/${item.weather[0].icon}.png`} width={24} height={24} /></th>
             <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
